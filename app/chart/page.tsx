@@ -64,7 +64,13 @@ export default function ChartPage() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(LAYOUT_KEY);
-      if (saved === 'vertical' || saved === 'horizontal') setLayoutMode(saved);
+      // 移动端强制 horizontal（棋盘在窄屏挤压）
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      if (isMobile) {
+        setLayoutMode('horizontal');
+      } else if (saved === 'vertical' || saved === 'horizontal') {
+        setLayoutMode(saved);
+      }
     } catch {}
   }, []);
 
@@ -116,20 +122,21 @@ export default function ChartPage() {
 
   return (
     <main className="font-scale-container min-h-screen bg-cosmic px-3 py-4 md:px-6 md:py-6">
-      {/* 顶部工具栏 */}
-      <div className="mx-auto mb-3 flex max-w-7xl flex-wrap items-center justify-between gap-2 toolbar-royal relative">
-        <button
-          onClick={handleReset}
-          className="btn-royal"
-        >
-          ← 重新起盘
-        </button>
+      {/* 顶部工具栏（移动端两行布局 + 紧凑） */}
+      <div className="mx-auto mb-3 max-w-7xl toolbar-royal relative">
+        {/* 第一行：重新起盘 + AI 状态 */}
+        <div className="flex items-center justify-between gap-2">
+          <button
+            onClick={handleReset}
+            className="btn-royal text-[12px] px-2.5 py-1"
+          >
+            ← 重新起盘
+          </button>
 
-        <div className="flex items-center gap-2">
           {/* AI 状态指示器 */}
           {aiConfigured !== null && (
             <span
-              className="rounded-md px-2 py-0.5 text-[11px] tracking-wider"
+              className="rounded-md px-2 py-0.5 text-[10px] tracking-wider md:text-[11px]"
               style={{
                 background: aiConfigured ? 'rgba(90,154,114,0.15)' : 'rgba(201,112,112,0.15)',
                 color: aiConfigured ? 'var(--green)' : 'var(--red)',
@@ -139,12 +146,15 @@ export default function ChartPage() {
               {aiConfigured ? '✦ AI 已配置' : '○ AI 未配置'}
             </span>
           )}
+        </div>
 
+        {/* 第二行：字号 + 布局切换 */}
+        <div className="mt-2 flex items-center justify-end gap-2">
           {/* 字号调节 */}
           <FontSizeControl />
 
-          {/* 布局切换 */}
-          <div className="flex rounded-md border border-[var(--bdr)] p-0.5">
+          {/* 布局切换（移动端隐藏，只 PC 端显示） */}
+          <div className="hidden md:flex rounded-md border border-[var(--bdr)] p-0.5">
             <button
               type="button"
               onClick={() => changeLayout('horizontal')}

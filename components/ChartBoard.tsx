@@ -93,10 +93,10 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
       />
 
       {/* 命盘中央信息条（三徽章） */}
-      <div className="panel-topline my-3 flex items-center justify-between gap-2 rounded-lg bg-gradient-to-r from-[var(--purple)]/12 via-transparent to-[var(--blue)]/12 border border-[var(--bdr)] px-3 py-2">
-        <span className="info-badge">☯ 五行局 · {chart.wuxingJuName}</span>
-        <span className="info-badge info-badge--muted">🎂 {chart.currentAge} 岁</span>
-        <span className="info-badge">{liunianYear} 流年</span>
+      <div className="panel-topline my-2 md:my-3 flex items-center justify-between gap-1 md:gap-2 rounded-lg bg-gradient-to-r from-[var(--purple)]/12 via-transparent to-[var(--blue)]/12 border border-[var(--bdr)] px-2 md:px-3 py-1.5 md:py-2">
+        <span className="info-badge text-[10px] md:text-xs px-2 md:px-2.5">☯ {chart.wuxingJuName}</span>
+        <span className="info-badge info-badge--muted text-[10px] md:text-xs px-2 md:px-2.5">🎂 {chart.currentAge} 岁</span>
+        <span className="info-badge text-[10px] md:text-xs px-2 md:px-2.5">{liunianYear}</span>
       </div>
 
       {/* 12 格命盘（4×4 标准紫微盘：四边 12 宫 + 中央 2×2 信息块） */}
@@ -111,11 +111,11 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
 
         {/* 中上：左格 + 中央 2×2 信息块 + 右格 */}
         <PalaceCell palace={{ ...orderedPalaces[4], name: wrapName(orderedPalaces[4].name) }} onClick={handlePalaceClick} enterDelay={4 * 0.05} />
-        <div className="chart-center-block col-span-2 row-span-2 flex flex-col items-center justify-center rounded-lg px-2 text-center">
-          <div className="text-[11px] text-[var(--tx-3)] tracking-[0.3em] mt-3">紫微斗数</div>
-          <div className="my-1 text-xl chart-center-title">命 盘</div>
-          <div className="text-[11px] text-[var(--gold-soft)] tracking-wider">五行局 · {chart.wuxingJuName}</div>
-          <div className="text-[11px] text-[var(--tx-2)]">{chart.currentAge} 岁</div>
+        <div className="chart-center-block col-span-2 row-span-2 flex flex-col items-center justify-center rounded-lg px-1 md:px-2 text-center">
+          <div className="text-[9px] md:text-[11px] text-[var(--tx-3)] tracking-[0.3em] mt-3">紫微斗数</div>
+          <div className="my-0.5 md:my-1 text-sm md:text-xl chart-center-title">命 盘</div>
+          <div className="hidden md:block text-[11px] text-[var(--gold-soft)] tracking-wider">五行局 · {chart.wuxingJuName}</div>
+          <div className="hidden md:block text-[11px] text-[var(--tx-2)]">{chart.currentAge} 岁</div>
           <div className="mt-2 rounded-full border border-[var(--bdr)] px-2.5 py-0.5 text-[10px] text-[var(--tx-3)] tracking-wider">
             {timeView === 'benming' && '☯ 本命'}
             {timeView === 'daxian' && '⏳ 大限'}

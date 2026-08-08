@@ -46,7 +46,7 @@ export default function PalaceCell({ palace, onClick, compact, enterDelay }: Pro
       whileTap={onClick ? { scale: 0.99 } : undefined}
       style={enterDelay !== undefined ? { animationDelay: `${enterDelay}s` } : undefined}
       className={clsx(
-        'group relative h-full w-full text-left p-2 transition-colors palace-cell--glow palace-cell--premium',
+        'group relative h-full w-full text-left p-1 md:p-2 transition-colors palace-cell--glow palace-cell--premium',
         enterDelay !== undefined && 'palace-enter',
         isMing && 'palace-cell--ming',
         'border rounded-lg overflow-hidden',
@@ -58,7 +58,7 @@ export default function PalaceCell({ palace, onClick, compact, enterDelay }: Pro
       )}
     >
       {/* 宫名（顶部） */}
-      <div className="flex items-center justify-between text-[13px] leading-tight">
+      <div className="flex items-center justify-between text-[11px] md:text-[13px] leading-tight">
         <span
           className={clsx(
             'palace-name tracking-wider truncate',
@@ -73,9 +73,9 @@ export default function PalaceCell({ palace, onClick, compact, enterDelay }: Pro
       </div>
 
       {/* 星曜列表 */}
-      <div className={clsx('mt-1.5 space-y-1', compact && 'text-[11px]')}>
+      <div className={clsx('mt-1 md:mt-1.5 space-y-0.5 md:space-y-1', compact && 'text-[11px]')}>
         {palace.stars.length === 0 ? (
-          <div className="text-[11px] text-[var(--tx-4)] italic mt-1">
+          <div className="text-[10px] md:text-[11px] text-[var(--tx-4)] italic mt-1">
             {isEmpty && palace.borrowedFromName
               ? `借${palace.borrowedFromName}`
               : '—'}
@@ -88,14 +88,14 @@ export default function PalaceCell({ palace, onClick, compact, enterDelay }: Pro
                 key={`${s.name}-${idx}`}
                 className={clsx(
                   'flex items-center justify-between gap-1 truncate',
-                  isMajor ? 'star-major text-[15px] font-semibold text-[var(--tx-1)]' : 'text-xs text-[var(--tx-3)] opacity-85',
+                  isMajor ? 'star-major text-[12px] md:text-[15px] font-semibold text-[var(--tx-1)]' : 'text-[10px] md:text-xs text-[var(--tx-3)] opacity-85',
                 )}
               >
                 <span className="truncate">{s.name}</span>
                 {s.siHua && (
                   <span
                     className={clsx(
-                      'ml-1 shrink-0 text-[11px] font-bold px-1 rounded',
+                      'ml-1 shrink-0 text-[10px] md:text-[11px] font-bold px-1 rounded',
                       siHuaColor[s.siHua] || 'text-[var(--tx-2)]',
                     )}
                   >
