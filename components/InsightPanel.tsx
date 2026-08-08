@@ -199,7 +199,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
   };
 
   return (
-    <div className="panel-topline flex h-full min-h-[520px] flex-col rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/80 backdrop-blur-xl shadow-[var(--sh-md)]">
+    <div className="panel-topline flex h-full min-h-[480px] md:min-h-[520px] flex-col rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/80 backdrop-blur-xl shadow-[var(--sh-md)]">
       {/* ─── 顶部 Tab 栏 ─────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-1.5 border-b border-[var(--bdr)] px-2 pt-2 pb-1.5">
         {TOPICS.map(t => {
@@ -306,7 +306,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
                 color={currentTopic.color}
                 icon={currentTopic.icon}
                 main={`推演${currentTopic.label}中`}
-                sub="AI 正在排定星辰..."
+                sub="正在排盘理气…"
               />
             );
           }
@@ -317,7 +317,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
       {/* ─── 输入栏 ──────────────────────────────────── */}
       <form
         onSubmit={onUserSubmit}
-        className="flex items-center gap-2 border-t border-[var(--bdr)] px-2.5 py-2"
+        className="flex items-center gap-1.5 md:gap-2 border-t border-[var(--bdr)] px-2.5 py-2 bg-[var(--bg-card)]/80"
       >
         <input
           type="text"
@@ -325,12 +325,12 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
           onChange={e => setInputValue(e.target.value)}
           placeholder={`追问${currentTopic.label}…`}
           disabled={loading}
-          className="flex-1 rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-3 py-2 text-[15px] text-[var(--tx-1)] placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none disabled:opacity-50"
+          className="flex-1 min-w-0 rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2.5 md:px-3 py-2 text-[14px] md:text-[15px] text-[var(--tx-1)] placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={!inputValue.trim() || loading}
-          className="rounded-lg px-4 py-2 text-[15px] font-medium disabled:opacity-30 transition active:scale-95"
+          className="shrink-0 rounded-lg px-3 md:px-4 py-2 text-[14px] md:text-[15px] font-medium disabled:opacity-30 transition active:scale-95"
           style={{
             background: `linear-gradient(135deg, ${currentTopic.color}, ${currentTopic.color}cc)`,
             color: '#0a0a0f',
@@ -393,7 +393,7 @@ function AiContent({ text, streaming, accentColor }: { text: string; streaming: 
         );
       })}
       {streaming && text.length === 0 && (
-        <span className="text-[var(--tx-3)] text-sm italic">AI 思考中…</span>
+        <span className="text-[var(--tx-3)] text-sm italic">推演中…</span>
       )}
     </div>
   );

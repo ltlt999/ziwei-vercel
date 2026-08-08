@@ -30,8 +30,8 @@ const POINTS = ['排定', '推演', '解析', '印证', '落笔'];
 export default function LoadingIndicator({
   color = 'var(--gold)',
   icon = '✦',
-  main = '推演中...',
-  sub = '请稍候，AI 正在解析命盘',
+  main = '推演中…',
+  sub = '正在排定星辰、理气化神',
 }: Props) {
   return (
     <div className="flex flex-col items-center justify-center py-6 select-none">
