@@ -48,6 +48,7 @@ export default function PalaceCell({ palace, onClick, compact, enterDelay }: Pro
       className={clsx(
         'group relative h-full w-full text-left p-2 transition-colors palace-cell--glow palace-cell--premium',
         enterDelay !== undefined && 'palace-enter',
+        isMing && 'palace-cell--ming',
         'border rounded-lg overflow-hidden',
         isMing
           ? 'border-[var(--gold)] shadow-[0_0_12px_var(--gold-glow)]'

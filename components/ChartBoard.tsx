@@ -101,6 +101,9 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
 
       {/* 12 格命盘（4×4 标准紫微盘：四边 12 宫 + 中央 2×2 信息块） */}
       <div className="chart-grid-board grid grid-cols-4 grid-rows-4 gap-1 p-1 aspect-square w-full">
+        {/* 四角角饰 */}
+        <div className="chart-corners" />
+
         {/* 上排 4 格 */}
         {orderedPalaces.slice(0, 4).map((p, i) => (
           <PalaceCell key={`p-${p.branch}`} palace={{ ...p, name: wrapName(p.name) }} onClick={handlePalaceClick} enterDelay={i * 0.05} />
@@ -108,12 +111,12 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
 
         {/* 中上：左格 + 中央 2×2 信息块 + 右格 */}
         <PalaceCell palace={{ ...orderedPalaces[4], name: wrapName(orderedPalaces[4].name) }} onClick={handlePalaceClick} enterDelay={4 * 0.05} />
-        <div className="col-span-2 row-span-2 flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-[var(--purple)]/12 via-[var(--bg-elevated)] to-[var(--blue)]/12 border border-[var(--bdr-strong)] px-2 text-center">
-          <div className="text-[11px] text-[var(--tx-3)] tracking-[0.3em]">紫微斗数</div>
-          <div className="my-1 text-xl font-semibold chart-center-title">命盘</div>
-          <div className="text-[11px] text-[var(--gold-soft)]">五行局 · {chart.wuxingJuName}</div>
+        <div className="chart-center-block col-span-2 row-span-2 flex flex-col items-center justify-center rounded-lg px-2 text-center">
+          <div className="text-[11px] text-[var(--tx-3)] tracking-[0.3em] mt-3">紫微斗数</div>
+          <div className="my-1 text-xl chart-center-title">命 盘</div>
+          <div className="text-[11px] text-[var(--gold-soft)] tracking-wider">五行局 · {chart.wuxingJuName}</div>
           <div className="text-[11px] text-[var(--tx-2)]">{chart.currentAge} 岁</div>
-          <div className="mt-1.5 rounded-full border border-[var(--bdr)] px-2.5 py-0.5 text-[10px] text-[var(--tx-3)]">
+          <div className="mt-2 rounded-full border border-[var(--bdr)] px-2.5 py-0.5 text-[10px] text-[var(--tx-3)] tracking-wider">
             {timeView === 'benming' && '☯ 本命'}
             {timeView === 'daxian' && '⏳ 大限'}
             {timeView === 'liunian' && `🌊 ${liunianYear} 流年`}
@@ -122,7 +125,7 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
           {selectedPalace && (
             <button
               onClick={() => setSelectedPalace(null)}
-              className="mt-1 text-[10px] text-[var(--tx-3)] underline hover:text-[var(--tx-1)]"
+              className="mt-1.5 text-[10px] text-[var(--tx-3)] underline hover:text-[var(--tx-1)]"
             >
               ✕ 清除选中
             </button>

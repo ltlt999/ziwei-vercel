@@ -59,6 +59,15 @@ body {
   font-feature-settings: 'kern' 1, 'liga' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 锐利文字：微白光晕提升清晰度（暗色背景上对比更强） */
+h1, h2, h3, .text-sharp {
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.star-major, .palace-name {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 
 /* 字体缩放容器（桌面端） */
@@ -88,16 +97,17 @@ body {
    ============================================================ */
 .bg-cosmic {
   background:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(107, 91, 149, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 85% 15%, rgba(74, 111, 165, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(107, 91, 149, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 15%, rgba(74, 111, 165, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 110%, rgba(212, 168, 67, 0.06) 0%, transparent 60%),
     linear-gradient(135deg, #0a0a0f 0%, #11121a 30%, #1a1428 60%, #0a0a0f 100%);
-  background-size: 200% 200%, 150% 150%, 100% 100%;
+  background-size: 200% 200%, 150% 150%, 120% 120%, 100% 100%;
   animation: cosmic-drift 36s ease-in-out infinite;
 }
 
 @keyframes cosmic-drift {
-  0%, 100% { background-position: 0% 0%, 100% 0%, 0 0; }
-  50% { background-position: 100% 100%, 0% 100%, 0 0; }
+  0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  50% { background-position: 100% 100%, 0% 100%, 100% 80%, 0 0; }
 }
 
 /* 页面级光点粒子（纯 CSS，柔和星尘感） */
@@ -219,30 +229,125 @@ body {
    命盘殿堂级升级（高级感 · 专业感 · 线条质感）
    ============================================================ */
 
-/* 棋盘：罗盘同心圆底纹 + 内发光 */
+/* 棋盘：罗盘同心圆底纹 + 内发光 + 金色描边 + 角饰 */
 .chart-grid-board {
   position: relative;
   background:
-    radial-gradient(circle at 50% 50%, rgba(107, 91, 149, 0.10) 0%, transparent 42%),
-    radial-gradient(circle at 50% 50%, rgba(74, 111, 165, 0.06) 0%, transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(212, 168, 67, 0.04) 0%, transparent 80%),
-    linear-gradient(160deg, #13141f 0%, #0d0e16 100%);
+    radial-gradient(circle at 50% 50%, rgba(107, 91, 149, 0.12) 0%, transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(74, 111, 165, 0.08) 0%, transparent 58%),
+    radial-gradient(circle at 50% 50%, rgba(212, 168, 67, 0.05) 0%, transparent 78%),
+    linear-gradient(160deg, #14151f 0%, #0c0d14 100%);
   box-shadow:
-    inset 0 0 40px rgba(0, 0, 0, 0.35),
-    inset 0 0 1px rgba(212, 168, 67, 0.15);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 168, 67, 0.28);
+    inset 0 0 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 1px rgba(212, 168, 67, 0.25),
+    0 0 32px rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(212, 168, 67, 0.32);
 }
 
-/* 宫格 premium：微渐变 + 分隔线 */
+/* 棋盘四角金色角饰（古典卷轴质感） */
+.chart-grid-board::before,
+.chart-grid-board::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 2;
+}
+.chart-grid-board::before {
+  top: 6px;
+  left: 6px;
+  border-top: 1.5px solid var(--gold);
+  border-left: 1.5px solid var(--gold);
+  border-radius: 6px 0 0 0;
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
+  opacity: 0.7;
+}
+.chart-grid-board::after {
+  bottom: 6px;
+  right: 6px;
+  border-bottom: 1.5px solid var(--gold);
+  border-right: 1.5px solid var(--gold);
+  border-radius: 0 0 6px 0;
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
+  opacity: 0.7;
+}
+/* 四角另外两个 */
+.chart-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.chart-corners::before,
+.chart-corners::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+}
+.chart-corners::before {
+  top: 6px;
+  right: 6px;
+  border-top: 1.5px solid var(--gold);
+  border-right: 1.5px solid var(--gold);
+  border-radius: 0 6px 0 0;
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
+  opacity: 0.7;
+}
+.chart-corners::after {
+  bottom: 6px;
+  left: 6px;
+  border-bottom: 1.5px solid var(--gold);
+  border-left: 1.5px solid var(--gold);
+  border-radius: 0 0 0 6px;
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
+  opacity: 0.7;
+}
+
+/* 宫格 premium：微渐变 + 分隔线 + 立体阴影 */
 .palace-cell--premium {
-  background: linear-gradient(165deg, rgba(26, 28, 42, 0.92) 0%, rgba(17, 18, 26, 0.96) 100%);
-  border: 1px solid rgba(212, 168, 67, 0.10);
+  position: relative;
+  background:
+    linear-gradient(165deg, rgba(32, 36, 56, 0.94) 0%, rgba(20, 22, 34, 0.96) 60%, rgba(15, 17, 26, 0.98) 100%);
+  border: 1px solid rgba(212, 168, 67, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(212, 168, 67, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease, background 0.3s ease;
 }
 .palace-cell--premium:hover {
-  border-color: rgba(212, 168, 67, 0.45);
-  box-shadow: 0 0 16px rgba(212, 168, 67, 0.12), inset 0 0 20px rgba(212, 168, 67, 0.04);
+  border-color: rgba(212, 168, 67, 0.5);
+  box-shadow:
+    0 0 18px rgba(212, 168, 67, 0.18),
+    inset 0 0 24px rgba(212, 168, 67, 0.05),
+    inset 0 1px 0 rgba(212, 168, 67, 0.15);
+  background:
+    linear-gradient(165deg, rgba(38, 42, 64, 0.96) 0%, rgba(26, 28, 42, 0.98) 60%, rgba(20, 22, 34, 1) 100%);
+}
+
+/* 宫位底部小金条（区分线 + 高端感） */
+.palace-cell--premium::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 168, 67, 0.35), transparent);
+}
+
+/* 命宫专属：金色立体边框 + 内部辉光 */
+.palace-cell--ming {
+  border-color: rgba(239, 197, 71, 0.65) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 197, 71, 0.35),
+    0 0 16px rgba(212, 168, 67, 0.28),
+    inset 0 1px 0 rgba(239, 197, 71, 0.25) !important;
+  background:
+    linear-gradient(165deg, rgba(48, 40, 22, 0.55) 0%, rgba(28, 24, 16, 0.85) 100%) !important;
 }
 
 /* 宫名：衬线 + 左侧金色竖条（古卷宗质感） */
@@ -312,6 +417,46 @@ body {
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: gold-flow 5s ease-in-out infinite;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+}
+
+/* 中央信息块：金色菱形装饰 + 内部放射渐变 */
+.chart-center-block {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(212, 168, 67, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 50% 70%, rgba(107, 91, 149, 0.12) 0%, transparent 55%),
+    linear-gradient(165deg, #1a1d2e 0%, #0e1018 100%);
+  border: 1.5px solid rgba(212, 168, 67, 0.45);
+  box-shadow:
+    inset 0 0 24px rgba(212, 168, 67, 0.08),
+    0 0 24px rgba(212, 168, 67, 0.12);
+}
+/* 中心钻石（金色小八角） */
+.chart-center-block::before {
+  content: '✦';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--gold-soft);
+  text-shadow: 0 0 8px rgba(239, 197, 71, 0.8);
+  animation: diamond-pulse 3s ease-in-out infinite;
+}
+@keyframes diamond-pulse {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+}
+/* 中心十字分割线（装饰感） */
+.chart-center-block::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(212, 168, 67, 0.18);
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 /* 面板顶线（画框质感） */
@@ -344,9 +489,60 @@ body {
   .divider-flow::after,
   .animate-fade-up,
   .palace-enter,
-  .chart-center-title {
+  .chart-center-title,
+  .chart-center-block::before {
     animation: none !important;
   }
+}
+
+/* ============================================================
+   命盘页工具栏（毛玻璃 + 金色左竖条）
+   ============================================================ */
+.toolbar-royal {
+  background:
+    linear-gradient(90deg, rgba(212, 168, 67, 0.08), rgba(212, 168, 67, 0.02) 30%, transparent 100%);
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(212, 168, 67, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 8px 14px;
+}
+.toolbar-royal::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12%;
+  bottom: 12%;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold-deep));
+  box-shadow: 0 0 8px rgba(239, 197, 71, 0.5);
+}
+
+/* 按钮升级 */
+.btn-royal {
+  position: relative;
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.15), rgba(212, 168, 67, 0.05));
+  border: 1px solid rgba(212, 168, 67, 0.3);
+  color: var(--tx-1);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  transition: all 0.25s ease;
+}
+.btn-royal:hover {
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.28), rgba(212, 168, 67, 0.12));
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+  transform: translateY(-1px);
+}
+.btn-royal--active {
+  background: linear-gradient(135deg, rgba(239, 197, 71, 0.35), rgba(212, 168, 67, 0.2));
+  border-color: var(--gold-soft);
+  color: var(--gold-soft);
+  box-shadow: 0 0 8px rgba(239, 197, 71, 0.4);
 }
 
 .text-gold-gradient {

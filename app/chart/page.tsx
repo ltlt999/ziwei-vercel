@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { clsx } from 'clsx';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
 import DailyFortune from '@/components/DailyFortune';
@@ -116,10 +117,10 @@ export default function ChartPage() {
   return (
     <main className="font-scale-container min-h-screen bg-cosmic px-3 py-4 md:px-6 md:py-6">
       {/* 顶部工具栏 */}
-      <div className="mx-auto mb-3 flex max-w-7xl flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--bdr)] bg-[var(--bg-card)]/60 px-3 py-2 backdrop-blur-xl">
+      <div className="mx-auto mb-3 flex max-w-7xl flex-wrap items-center justify-between gap-2 toolbar-royal relative">
         <button
           onClick={handleReset}
-          className="btn-breathe rounded-lg border border-[var(--bdr)] px-3 py-1.5 text-xs text-[var(--tx-2)] hover:border-[var(--bdr-strong)] transition active:scale-95"
+          className="btn-royal"
         >
           ← 重新起盘
         </button>
@@ -128,7 +129,7 @@ export default function ChartPage() {
           {/* AI 状态指示器 */}
           {aiConfigured !== null && (
             <span
-              className="rounded-md px-2 py-0.5 text-[11px]"
+              className="rounded-md px-2 py-0.5 text-[11px] tracking-wider"
               style={{
                 background: aiConfigured ? 'rgba(90,154,114,0.15)' : 'rgba(201,112,112,0.15)',
                 color: aiConfigured ? 'var(--green)' : 'var(--red)',
@@ -147,8 +148,7 @@ export default function ChartPage() {
             <button
               type="button"
               onClick={() => changeLayout('horizontal')}
-              className="rounded px-2 py-0.5 text-xs"
-              style={layoutMode === 'horizontal' ? { background: 'var(--gold)', color: '#0a0a0f' } : { color: 'var(--tx-2)' }}
+              className={clsx('rounded px-2 py-0.5 text-xs transition', layoutMode === 'horizontal' ? 'btn-royal btn-royal--active' : 'text-[var(--tx-2)]')}
               title="左右布局"
             >
               ⊞
@@ -156,8 +156,7 @@ export default function ChartPage() {
             <button
               type="button"
               onClick={() => changeLayout('vertical')}
-              className="rounded px-2 py-0.5 text-xs"
-              style={layoutMode === 'vertical' ? { background: 'var(--gold)', color: '#0a0a0f' } : { color: 'var(--tx-2)' }}
+              className={clsx('rounded px-2 py-0.5 text-xs transition', layoutMode === 'vertical' ? 'btn-royal btn-royal--active' : 'text-[var(--tx-2)]')}
               title="上下布局"
             >
               ⊟
