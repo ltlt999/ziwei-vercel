@@ -54,7 +54,7 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
       )}
     >
       {/* 宫名（顶部） */}
-      <div className="flex items-center justify-between text-xs">
+      <div className="flex items-center justify-between text-[13px] leading-tight">
         <span
           className={clsx(
             'tracking-wider truncate',
@@ -64,14 +64,14 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
           {palace.name}
         </span>
         {isCurrentDx && (
-          <span className="ml-1 h-1.5 w-1.5 rounded-full bg-[var(--gold)] shadow-[0_0_6px_var(--gold-glow)]" />
+          <span className="ml-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--gold)] shadow-[0_0_6px_var(--gold-glow)]" />
         )}
       </div>
 
       {/* 星曜列表 */}
-      <div className={clsx('mt-1 space-y-0.5', compact && 'text-[10px]')}>
+      <div className={clsx('mt-1.5 space-y-1', compact && 'text-[11px]')}>
         {palace.stars.length === 0 ? (
-          <div className="text-[10px] text-[var(--tx-4)] italic mt-1">
+          <div className="text-[11px] text-[var(--tx-4)] italic mt-1">
             {isEmpty && palace.borrowedFromName
               ? `借${palace.borrowedFromName}`
               : '—'}
@@ -84,14 +84,14 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
                 key={`${s.name}-${idx}`}
                 className={clsx(
                   'flex items-center justify-between gap-1 truncate',
-                  isMajor ? 'text-sm font-medium text-[var(--tx-1)]' : 'text-[11px] text-[var(--tx-3)] opacity-80',
+                  isMajor ? 'text-[15px] font-semibold text-[var(--tx-1)]' : 'text-xs text-[var(--tx-3)] opacity-85',
                 )}
               >
                 <span className="truncate">{s.name}</span>
                 {s.siHua && (
                   <span
                     className={clsx(
-                      'ml-1 text-[10px] font-bold px-1 rounded',
+                      'ml-1 shrink-0 text-[11px] font-bold px-1 rounded',
                       siHuaColor[s.siHua] || 'text-[var(--tx-2)]',
                     )}
                   >

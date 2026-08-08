@@ -210,7 +210,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
               type="button"
               onClick={() => handleTabChange(t.key)}
               className={clsx(
-                'flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition',
+                'flex items-center gap-1 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition',
                 isActive
                   ? 'text-[var(--tx-1)]'
                   : 'text-[var(--tx-3)] hover:text-[var(--tx-1)]',
@@ -254,7 +254,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
             return (
               <div key={i} className="mb-2.5 flex justify-end">
                 <div
-                  className="max-w-[80%] rounded-xl px-3 py-2 text-sm leading-relaxed"
+                  className="max-w-[80%] rounded-xl px-3.5 py-2.5 text-[15px] leading-[1.7]"
                   style={{ background: `${currentTopic.color}20`, color: 'var(--tx-1)' }}
                 >
                   {m.content}
@@ -265,13 +265,13 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
 
           return (
             <div key={i} className="mb-2.5">
-              <div className="mb-1 flex items-center gap-1.5 text-xs">
+              <div className="mb-1 flex items-center gap-1.5 text-[13px]">
                 <span style={{ color: currentTopic.color }}>{currentTopic.icon}</span>
                 <span style={{ color: currentTopic.color }} className="font-medium">
                   {currentTopic.label}解读
                 </span>
               </div>
-              <div className="relative rounded-xl bg-[var(--bg-elevated)] px-3 py-2.5 text-sm leading-relaxed text-[var(--tx-1)]">
+              <div className="relative rounded-xl bg-[var(--bg-elevated)] px-3.5 py-3 text-[15px] leading-[1.75] text-[var(--tx-1)]">
                 <AiContent text={m.content} streaming={isStreaming} accentColor={currentTopic.color} />
                 {isStreaming && m.content.length > 0 && (
                   <span className="ml-0.5 animate-pulse" style={{ color: currentTopic.color }}>▌</span>
@@ -325,12 +325,12 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
           onChange={e => setInputValue(e.target.value)}
           placeholder={`追问${currentTopic.label}…`}
           disabled={loading}
-          className="flex-1 rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-3 py-1.5 text-sm text-[var(--tx-1)] placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none disabled:opacity-50"
+          className="flex-1 rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-3 py-2 text-[15px] text-[var(--tx-1)] placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={!inputValue.trim() || loading}
-          className="rounded-lg px-3 py-1.5 text-sm font-medium disabled:opacity-30 transition active:scale-95"
+          className="rounded-lg px-4 py-2 text-[15px] font-medium disabled:opacity-30 transition active:scale-95"
           style={{
             background: `linear-gradient(135deg, ${currentTopic.color}, ${currentTopic.color}cc)`,
             color: '#0a0a0f',
@@ -371,7 +371,7 @@ function AiContent({ text, streaming, accentColor }: { text: string; streaming: 
           return (
             <div
               key={i}
-              className="mt-2 mb-1 text-[13px] font-semibold"
+              className="mt-2 mb-1 text-[15px] font-semibold"
               style={{ color: accentColor }}
             >
               ▎{sectionMatch[1]}
@@ -383,7 +383,7 @@ function AiContent({ text, streaming, accentColor }: { text: string; streaming: 
         // 行内加粗
         const boldParts = line.split(/\*\*(.+?)\*\*/g);
         return (
-          <div key={i} className="text-[13.5px] leading-[1.7]">
+          <div key={i} className="text-[15px] leading-[1.75]">
             {boldParts.map((part, j) => (
               <span key={j} className={j % 2 === 1 ? 'text-[var(--gold-soft)] font-medium' : ''}>
                 {part}
@@ -393,7 +393,7 @@ function AiContent({ text, streaming, accentColor }: { text: string; streaming: 
         );
       })}
       {streaming && text.length === 0 && (
-        <span className="text-[var(--tx-3)] text-xs italic">AI 思考中…</span>
+        <span className="text-[var(--tx-3)] text-sm italic">AI 思考中…</span>
       )}
     </div>
   );

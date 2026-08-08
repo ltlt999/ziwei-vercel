@@ -60,7 +60,7 @@ export default function LoadingIndicator({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="mt-3 text-sm font-medium text-[var(--tx-1)]"
+        className="mt-3 text-base font-medium text-[var(--tx-1)]"
       >
         {main}
       </motion.p>
@@ -70,13 +70,13 @@ export default function LoadingIndicator({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.25 }}
-        className="mt-1 text-xs text-[var(--tx-3)]"
+        className="mt-1 text-sm text-[var(--tx-3)]"
       >
         {sub}
       </motion.p>
 
       {/* 5 个命理点 */}
-      <div className="mt-3 flex items-center gap-2 text-[10px]">
+      <div className="mt-3 flex items-center gap-2 text-[11px]">
         {POINTS.map((label, i) => (
           <motion.div
             key={label}

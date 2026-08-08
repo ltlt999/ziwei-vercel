@@ -358,10 +358,27 @@ body {
   color: var(--tx-4);
 }
 
-/* select 暗色下拉修复 */
-select.input-field option {
-  background: var(--bg-card);
-  color: var(--tx-1);
+/* ⚠️ 暗色模式下原生 select option 白底浅字陷阱（skill ziwei-doushu-development #1）
+   浏览器 option 不继承 select 的 color，必须显式设置 */
+select option {
+  background: #ffffff;
+  color: #1a1a18;
+}
+[data-theme="dark"] select option,
+.dark select option {
+  background: #181a26;
+  color: #e8eef6;
+}
+
+/* ============================================================
+   卡片通用打磨
+   ============================================================ */
+.card-hover {
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.card-hover:hover {
+  border-color: var(--bdr-strong);
+  box-shadow: var(--sh-md), 0 0 12px var(--gold-glow);
 }
 
 /* ============================================================

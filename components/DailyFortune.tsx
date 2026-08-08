@@ -66,12 +66,12 @@ export default function DailyFortune({ chart }: Props) {
         className="flex w-full items-center justify-between text-left"
       >
         <div className="flex items-center gap-2">
-          <span className="text-lg">📅</span>
+          <span className="text-xl">📅</span>
           <div>
-            <div className="text-sm font-medium text-[var(--tx-1)]">
-              今日运势 {isPersonalized && <span className="ml-1 text-[10px] text-[var(--gold)]">· 个性化</span>}
+            <div className="text-[15px] font-medium text-[var(--tx-1)]">
+              今日运势 {isPersonalized && <span className="ml-1 text-[11px] text-[var(--gold)]">· 个性化</span>}
             </div>
-            <div className="text-[10px] text-[var(--tx-3)]">{today}</div>
+            <div className="text-[11px] text-[var(--tx-3)]">{today}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -102,23 +102,23 @@ export default function DailyFortune({ chart }: Props) {
           className="mt-3 space-y-2.5"
         >
           {/* 干支 */}
-          <div className="flex items-center justify-between rounded-lg bg-[var(--bg-elevated)] px-3 py-2 text-xs">
+          <div className="flex items-center justify-between rounded-lg bg-[var(--bg-elevated)] px-3 py-2 text-sm">
             <span className="text-[var(--tx-3)]">
               {fortune.dayGan}{fortune.dayZhi}日 · 五行属 <span style={{ color: scoreColor[fortune.score] }}>{fortune.dayElement}</span>
             </span>
             {isPersonalized && (
-              <span className="text-[10px] text-[var(--gold)]">
+              <span className="text-[11px] text-[var(--gold)]">
                 ⚡ {fortune.elementRelation}
               </span>
             )}
           </div>
 
           {/* 摘要 */}
-          <p className="text-sm leading-relaxed text-[var(--tx-1)]">{fortune.summary}</p>
+          <p className="text-[15px] leading-[1.75] text-[var(--tx-1)]">{fortune.summary}</p>
 
           {/* 命盘关联提示（仅个性化版）*/}
           {isPersonalized && fortune.palaceHint && (
-            <div className="rounded-lg border border-dashed border-[var(--gold)]/40 bg-[var(--gold)]/5 px-3 py-2 text-xs text-[var(--gold-soft)]">
+            <div className="rounded-lg border border-dashed border-[var(--gold)]/40 bg-[var(--gold)]/5 px-3 py-2 text-sm text-[var(--gold-soft)]">
               🪐 {fortune.palaceHint}
             </div>
           )}
@@ -129,7 +129,7 @@ export default function DailyFortune({ chart }: Props) {
               {fortune.tips.map((tip, i) => (
                 <span
                   key={i}
-                  className="rounded-md border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-0.5 text-[10px] text-[var(--tx-2)]"
+                  className="rounded-md border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-1 text-[11px] text-[var(--tx-2)]"
                 >
                   {tip}
                 </span>

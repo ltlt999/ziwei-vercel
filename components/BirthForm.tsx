@@ -210,19 +210,27 @@ export default function BirthForm({ onSubmit }: Props) {
 }
 
 function NumberInput({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (n: number) => void }) {
+  // 可手动输入的文本框：inputMode=numeric 手机弹数字键盘，text 类型避免原生 spinner
   return (
     <label className="block">
-      <span className="text-[10px] text-[var(--tx-3)]">{label}</span>
+      <span className="text-xs text-[var(--tx-3)]">{label}</span>
       <input
-        type="number"
-        value={value}
-        min={min}
-        max={max}
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        value={value || ''}
         onChange={e => {
-          const v = parseInt(e.target.value, 10);
+          // 只保留数字
+          const cleaned = e.target.value.replace(/\D/g, '');
+          if (cleaned === '') {
+            onChange(min); // 清空时回到最小值，避免 NaN
+            return;
+          }
+          const v = parseInt(cleaned, 10);
           if (!isNaN(v)) onChange(Math.max(min, Math.min(max, v)));
         }}
-        className="mt-0.5 w-full rounded border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-1.5 text-center text-sm focus:border-[var(--gold)] focus:outline-none"
+        onFocus={e => e.target.select()}
+        className="mt-1 w-full rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-2.5 text-center text-lg font-medium text-[var(--tx-1)] focus:border-[var(--gold)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]/40"
       />
     </label>
   );

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
 import DailyFortune from '@/components/DailyFortune';
+import FontSizeControl from '@/components/FontSizeControl';
 import type { ZiweiChart, BirthInfo, Palace } from '@/lib/ziwei/types';
 
 const STORAGE_INPUT_KEY = 'ziwei-chart-input';
@@ -122,11 +123,11 @@ export default function ChartPage() {
           ← 重新起盘
         </button>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {/* AI 状态指示器 */}
           {aiConfigured !== null && (
             <span
-              className="rounded-md px-2 py-0.5 text-[10px]"
+              className="rounded-md px-2 py-0.5 text-[11px]"
               style={{
                 background: aiConfigured ? 'rgba(90,154,114,0.15)' : 'rgba(201,112,112,0.15)',
                 color: aiConfigured ? 'var(--green)' : 'var(--red)',
@@ -137,12 +138,15 @@ export default function ChartPage() {
             </span>
           )}
 
+          {/* 字号调节 */}
+          <FontSizeControl />
+
           {/* 布局切换 */}
           <div className="flex rounded-md border border-[var(--bdr)] p-0.5">
             <button
               type="button"
               onClick={() => changeLayout('horizontal')}
-              className="rounded px-1.5 py-0.5 text-xs"
+              className="rounded px-2 py-0.5 text-xs"
               style={layoutMode === 'horizontal' ? { background: 'var(--gold)', color: '#0a0a0f' } : { color: 'var(--tx-2)' }}
               title="左右布局"
             >
@@ -151,7 +155,7 @@ export default function ChartPage() {
             <button
               type="button"
               onClick={() => changeLayout('vertical')}
-              className="rounded px-1.5 py-0.5 text-xs"
+              className="rounded px-2 py-0.5 text-xs"
               style={layoutMode === 'vertical' ? { background: 'var(--gold)', color: '#0a0a0f' } : { color: 'var(--tx-2)' }}
               title="上下布局"
             >

@@ -18,8 +18,6 @@ const VIEWS: { key: View; label: string; icon: string }[] = [
   { key: 'liuyue', label: '流月', icon: '🌙' },
 ];
 
-const YEARS = [2024, 2025, 2026, 2027, 2028, 2029, 2030];
-
 /**
  * 时间维度导航条（命盘上方）
  *
@@ -59,17 +57,26 @@ export default function TimeNav({ view, onViewChange, liunianYear, onLiunianYear
       </div>
 
       {view === 'liunian' && (
-        <div className="flex items-center gap-1.5">
-          <label className="text-[10px] text-[var(--tx-3)]">流年</label>
-          <select
-            value={liunianYear}
-            onChange={e => onLiunianYearChange(Number(e.target.value))}
-            className="rounded border border-[var(--bdr)] bg-[var(--bg-elevated)]/80 px-1.5 py-0.5 text-xs text-[var(--tx-1)] focus:border-[var(--gold)] focus:outline-none"
+        <div className="flex items-center gap-1 rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)]/80 px-1 py-0.5">
+          <button
+            type="button"
+            onClick={() => onLiunianYearChange(liunianYear - 1)}
+            className="flex h-6 w-6 items-center justify-center rounded-md text-sm font-bold text-[var(--gold-soft)] transition hover:bg-[var(--gold)]/15 active:scale-90"
+            aria-label="上一年"
           >
-            {YEARS.map(y => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
+            ‹
+          </button>
+          <span className="min-w-[52px] text-center text-sm font-semibold text-[var(--gold-soft)] select-none">
+            {liunianYear} 年
+          </span>
+          <button
+            type="button"
+            onClick={() => onLiunianYearChange(liunianYear + 1)}
+            className="flex h-6 w-6 items-center justify-center rounded-md text-sm font-bold text-[var(--gold-soft)] transition hover:bg-[var(--gold)]/15 active:scale-90"
+            aria-label="下一年"
+          >
+            ›
+          </button>
         </div>
       )}
     </div>

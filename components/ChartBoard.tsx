@@ -93,8 +93,8 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
       />
 
       {/* 命盘中央信息条 */}
-      <div className="my-3 rounded-lg bg-gradient-to-r from-[var(--purple)]/15 via-transparent to-[var(--blue)]/15 border border-[var(--bdr)] px-3 py-2">
-        <div className="flex items-center justify-between text-xs">
+      <div className="my-3 rounded-lg bg-gradient-to-r from-[var(--purple)]/15 via-transparent to-[var(--blue)]/15 border border-[var(--bdr)] px-3 py-2.5">
+        <div className="flex items-center justify-between text-[14px]">
           <span className="text-[var(--gold)] font-medium">五行局 · {chart.wuxingJuName}</span>
           <span className="text-[var(--tx-2)]">{chart.currentAge} 岁</span>
           <span className="text-[var(--tx-3)]">
