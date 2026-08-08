@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import type { ZiweiChart, InterpretMessage } from '@/lib/ziwei/types';
 import LoadingIndicator from './LoadingIndicator';
-import ShareModal from './ShareModal';
+import ShareModal from './InsightPanel/ShareModal';
 
 interface Props {
   chart: ZiweiChart;

@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import type { ZiweiChart, Palace } from '@/lib/ziwei/types';
-import PalaceCell from './PalaceCell';
-import TimeNav from './TimeNav';
+import PalaceCell from './ChartBoard/PalaceCell';
+import TimeNav from './ChartBoard/TimeNav';
 
 interface Props {
   chart: ZiweiChart;
