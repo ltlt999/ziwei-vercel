@@ -378,6 +378,24 @@ body {
   gap: 18px;
 }
 
+/* 上下布局：命盘面板居中放大（PC 端棋盘不再偏左小块） */
+.chart-grid--vertical .chart-panel {
+  width: 100%;
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+/* 左右布局：棋盘限宽居中（不顶到容器边缘） */
+.chart-grid--horizontal .chart-grid-board {
+  max-width: 640px;
+}
+
+/* 棋盘容器：默认居中，宽度自适应 */
+.chart-grid-board {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
 .chart-board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
