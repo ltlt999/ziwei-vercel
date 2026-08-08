@@ -258,7 +258,7 @@ export default function BirthForm({ onSubmit }: Props) {
           type="button"
           onClick={handleNext}
           disabled={!stepValid}
-          className="rounded-lg bg-gradient-to-r from-[var(--gold-soft)] via-[var(--gold)] to-[var(--gold-deep)] px-5 py-2 text-sm font-medium text-[var(--bg-base)] shadow-[var(--sh-sm)] disabled:opacity-40 transition active:scale-95"
+          className="btn-breathe rounded-lg bg-gradient-to-r from-[var(--gold-soft)] via-[var(--gold)] to-[var(--gold-deep)] px-5 py-2 text-sm font-medium text-[var(--bg-base)] shadow-[var(--sh-sm)] disabled:opacity-40 transition active:scale-95"
         >
           {step === 4 ? '✦ 开始推算' : '下一步 →'}
         </button>

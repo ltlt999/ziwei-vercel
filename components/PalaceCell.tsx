@@ -44,7 +44,7 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
       whileHover={onClick ? { scale: 1.02 } : undefined}
       whileTap={onClick ? { scale: 0.99 } : undefined}
       className={clsx(
-        'group relative h-full w-full text-left p-2 transition-colors',
+        'group relative h-full w-full text-left p-2 transition-colors palace-cell--glow',
         'bg-[var(--bg-card)] border rounded-lg overflow-hidden',
         isMing
           ? 'border-[var(--gold)] shadow-[0_0_12px_var(--gold-glow)]'

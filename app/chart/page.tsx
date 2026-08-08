@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import ChartBoard from '@/components/ChartBoard';
 import InsightPanel from '@/components/InsightPanel';
@@ -118,7 +119,7 @@ export default function ChartPage() {
       <div className="mx-auto mb-3 flex max-w-7xl flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--bdr)] bg-[var(--bg-card)]/60 px-3 py-2 backdrop-blur-xl">
         <button
           onClick={handleReset}
-          className="rounded-lg border border-[var(--bdr)] px-3 py-1.5 text-xs text-[var(--tx-2)] hover:border-[var(--bdr-strong)] transition active:scale-95"
+          className="btn-breathe rounded-lg border border-[var(--bdr)] px-3 py-1.5 text-xs text-[var(--tx-2)] hover:border-[var(--bdr-strong)] transition active:scale-95"
         >
           ← 重新起盘
         </button>
@@ -166,12 +167,20 @@ export default function ChartPage() {
       </div>
 
       {/* 今日运势（个性化版）*/}
-      <div className="mx-auto mb-3 max-w-7xl">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mx-auto mb-3 max-w-7xl"
+      >
         <DailyFortune chart={chart} />
-      </div>
+      </motion.div>
 
       {/* 主区域：命盘 + 解读 */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.1 }}
         className={`mx-auto grid max-w-7xl chart-grid chart-grid--${layoutMode}`}
         style={{
           gap: layoutMode === 'vertical' ? 18 : 22,
@@ -179,7 +188,7 @@ export default function ChartPage() {
       >
         <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
         <InsightPanel chart={chart} selectedPalace={selectedPalace} />
-      </div>
+      </motion.div>
 
       {/* 底部免责 */}
       <p className="mx-auto mt-6 max-w-7xl text-center text-[11px] text-[var(--tx-4)] italic">

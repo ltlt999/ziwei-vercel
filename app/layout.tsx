@@ -42,8 +42,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-ink-900 text-gray-100 antialiased">
+        {/* 全局星尘粒子层（纯 CSS，柔和浮动） */}
+        <div className="cosmic-stars" aria-hidden="true" />
         <ErrorBoundary>
-          {children}
+          <div className="relative z-10">
+            {children}
+          </div>
         </ErrorBoundary>
       </body>
     </html>
