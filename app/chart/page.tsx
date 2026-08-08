@@ -175,6 +175,11 @@ export default function ChartPage() {
         </div>
       </div>
 
+      {/* 顶部免责（紧贴顶部工具栏，不挤占底部空间） */}
+      <p className="mx-auto mb-2 max-w-7xl text-center text-[10px] md:text-[11px] text-[var(--tx-4)] italic">
+        本站工具仅供命理学习与娱乐参考，不构成任何人生决策建议。
+      </p>
+
       {/* 今日运势（个性化版）*/}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -198,11 +203,6 @@ export default function ChartPage() {
         <ChartBoard chart={chart} onPalaceSelect={setSelectedPalace} />
         <InsightPanel chart={chart} selectedPalace={selectedPalace} />
       </motion.div>
-
-      {/* 底部免责 */}
-      <p className="mx-auto mt-6 max-w-7xl text-center text-[11px] text-[var(--tx-4)] italic">
-        本站工具仅供命理学习与娱乐参考，不构成任何人生决策建议。
-      </p>
     </main>
   );
 }
