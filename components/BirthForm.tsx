@@ -25,30 +25,55 @@ const HOURS: { index: number; label: string; range: string }[] = [
 
 type Step = 1 | 2 | 3 | 4;
 
+/** 检查公历日期是否合法 */
+function isValidDate(y: number, m: number, d: number): boolean {
+  if (!y || !m || !d) return false;
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+}
+
+/** 下拉选项：年份 1900-2026（倒序，最新在前） */
+const YEAR_OPTIONS = Array.from({ length: 127 }, (_, i) => 2026 - i);
+const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => i + 1);
+const DAY_OPTIONS = Array.from({ length: 31 }, (_, i) => i + 1);
+
 /**
  * 起盘表单（4 步向导）
  *
- * Step 1: 年月日（公历）
+ * Step 1: 年月日（公历）— datalist combobox：既可下拉选择，也可手动输入
  * Step 2: 时辰（子丑寅...）
  * Step 3: 性别
  * Step 4: 确认 + 起盘
  *
- * 设计要点：
- *  - 进度条 4 段，每段 25%
- *  - 上一步/下一步按钮在底部
- *  - 不能跳过（必须顺序填）
+ * 设计要点（复刻原始紫微命盘版 + 修复 Vercel 版手动输入 bug）：
+ *  - 年/月/日用 string 存储 → 用户自由输入不被 clamp 打断（Vercel 旧版 bug 根因）
+ *  - <input list> + <datalist> → 原生下拉候选 + 手动键盘输入双支持
+ *  - 失焦时校验范围，提交时校验真实日期（如 2月30日 非法）
  */
 export default function BirthForm({ onSubmit }: Props) {
   const [step, setStep] = useState<Step>(1);
-  const [year, setYear] = useState<number>(1990);
-  const [month, setMonth] = useState<number>(1);
-  const [day, setDay] = useState<number>(1);
+  const [year, setYear] = useState<string>('1990');
+  const [month, setMonth] = useState<string>('1');
+  const [day, setDay] = useState<string>('1');
   const [hour, setHour] = useState<number>(0);
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [name, setName] = useState('');
 
+  const y = parseInt(year) || 0;
+  const m = parseInt(month) || 0;
+  const d = parseInt(day) || 0;
+
+  // 日期校验（只在 Step 1 显示错误）
+  let dateError = '';
+  if (step === 1) {
+    if (y < 1900 || y > 2026) dateError = '年份范围 1900–2026';
+    else if (m < 1 || m > 12) dateError = '月份 1–12';
+    else if (d < 1 || d > 31) dateError = '日期 1–31';
+    else if (!isValidDate(y, m, d)) dateError = `${m}月没有${d}日`;
+  }
+
   const stepValid = {
-    1: () => year >= 1900 && year <= 2100 && month >= 1 && month <= 12 && day >= 1 && day <= 31,
+    1: () => !!year && !!month && !!day && !dateError,
     2: () => hour >= 0 && hour <= 11,
     3: () => gender === 'male' || gender === 'female',
     4: () => true,
@@ -59,9 +84,9 @@ export default function BirthForm({ onSubmit }: Props) {
     if (step < 4) setStep((step + 1) as Step);
     else {
       onSubmit({
-        year,
-        month,
-        day,
+        year: y,
+        month: m,
+        day: d,
         hour,
         gender,
         name: name.trim() || undefined,
@@ -104,11 +129,44 @@ export default function BirthForm({ onSubmit }: Props) {
                 <h2 className="mb-4 text-xl font-semibold bg-gradient-to-br from-[var(--gold-soft)] to-[var(--gold-deep)] bg-clip-text text-transparent">
                   出生日期
                 </h2>
+                <p className="mb-3 text-xs text-[var(--tx-4)]">
+                  点击下拉选择，或直接键盘输入（公历）
+                </p>
                 <div className="grid grid-cols-3 gap-2">
-                  <NumberInput label="年" value={year} min={1900} max={2100} onChange={setYear} />
-                  <NumberInput label="月" value={month} min={1} max={12} onChange={setMonth} />
-                  <NumberInput label="日" value={day} min={1} max={31} onChange={setDay} />
+                  <DateCombo
+                    label="年"
+                    value={year}
+                    onChange={setYear}
+                    options={YEAR_OPTIONS}
+                    display={v => String(v)}
+                    placeholder="年份"
+                  />
+                  <DateCombo
+                    label="月"
+                    value={month}
+                    onChange={setMonth}
+                    options={MONTH_OPTIONS}
+                    display={v => `${v} 月`}
+                    placeholder="月份"
+                  />
+                  <DateCombo
+                    label="日"
+                    value={day}
+                    onChange={setDay}
+                    options={DAY_OPTIONS}
+                    display={v => `${v} 日`}
+                    placeholder="日期"
+                  />
                 </div>
+                {dateError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-2 text-xs text-[var(--red)]"
+                  >
+                    ✕ {dateError}
+                  </motion.p>
+                )}
               </>
             )}
 
@@ -178,7 +236,7 @@ export default function BirthForm({ onSubmit }: Props) {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   maxLength={20}
-                  className="mt-3 w-full rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-3 py-2 text-sm placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none"
+                  className="mt-3 w-full rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-3 py-2 text-[15px] placeholder:text-[var(--tx-4)] focus:border-[var(--gold)] focus:outline-none"
                 />
               </>
             )}
@@ -209,8 +267,42 @@ export default function BirthForm({ onSubmit }: Props) {
   );
 }
 
-function NumberInput({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (n: number) => void }) {
-  // 可手动输入的文本框：inputMode=numeric 手机弹数字键盘，text 类型避免原生 spinner
+/**
+ * 日期下拉 + 手动输入 combobox
+ *
+ * 用原生 <input list="xxx"> + <datalist>：
+ *  - 点击输入框 → 浏览器弹出候选列表（下拉选择）
+ *  - 直接打字 → 自由输入（string 存储，不打断）
+ *  - 失焦时自动规范化：空 → 保留，数字超范围 → 截断到边界
+ */
+function DateCombo({
+  label,
+  value,
+  onChange,
+  options,
+  display,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: number[];
+  display: (v: number) => string;
+  placeholder: string;
+}) {
+  const listId = `date-${label}-list`;
+
+  const handleBlur = () => {
+    const num = parseInt(value, 10);
+    if (!isNaN(num)) {
+      const min = Math.min(...options);
+      const max = Math.max(...options);
+      const clamped = Math.max(min, Math.min(max, num));
+      onChange(String(clamped));
+    }
+    // 空值保留（允许用户继续编辑）
+  };
+
   return (
     <label className="block">
       <span className="text-xs text-[var(--tx-3)]">{label}</span>
@@ -218,20 +310,22 @@ function NumberInput({ label, value, min, max, onChange }: { label: string; valu
         type="text"
         inputMode="numeric"
         pattern="[0-9]*"
-        value={value || ''}
+        list={listId}
+        value={value}
         onChange={e => {
-          // 只保留数字
+          // 只保留数字，但允许清空（清空时不回退，修复旧版打断 bug）
           const cleaned = e.target.value.replace(/\D/g, '');
-          if (cleaned === '') {
-            onChange(min); // 清空时回到最小值，避免 NaN
-            return;
-          }
-          const v = parseInt(cleaned, 10);
-          if (!isNaN(v)) onChange(Math.max(min, Math.min(max, v)));
+          onChange(cleaned);
         }}
-        onFocus={e => e.target.select()}
-        className="mt-1 w-full rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-2.5 text-center text-lg font-medium text-[var(--tx-1)] focus:border-[var(--gold)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]/40"
+        onBlur={handleBlur}
+        placeholder={placeholder}
+        className="mt-1 w-full cursor-pointer rounded-lg border border-[var(--bdr)] bg-[var(--bg-elevated)] px-2 py-2.5 text-center text-lg font-medium text-[var(--tx-1)] focus:border-[var(--gold)] focus:outline-none focus:ring-1 focus:ring-[var(--gold)]/40"
       />
+      <datalist id={listId}>
+        {options.map(o => (
+          <option key={o} value={String(o)} label={display(o)} />
+        ))}
+      </datalist>
     </label>
   );
 }
