@@ -1,0 +1,457 @@
+/* ============================================================
+   紫微斗数 Vercel 版全局样式
+   设计系统：紫蓝渐变 + 金色高亮 + 暗色军规
+   ============================================================ */
+
+/* Tailwind 基础 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 字体引入（Noto Serif SC = 中文衬线，Noto Sans SC = 中文无衬线） */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   设计 Token（CSS 变量）
+   ============================================================ */
+:root {
+  /* 配色 */
+  --bg-base: #0a0a0f;
+  --bg-card: #11121a;
+  --bg-elevated: #181a26;
+  --bdr: rgba(212, 168, 67, 0.18);
+  --bdr-strong: rgba(212, 168, 67, 0.35);
+
+  --tx-1: #f5f3e8;
+  --tx-2: #c0b8a8;
+  --tx-3: #8a8278;
+  --tx-4: #5a544a;
+
+  --gold: #d4a843;
+  --gold-soft: #efc547;
+  --gold-deep: #b8922a;
+  --gold-glow: rgba(212, 168, 67, 0.25);
+
+  --purple: #6b5b95;
+  --blue: #4a6fa5;
+  --green: #5a9a72;
+  --red: #c97070;
+  --pink: #d68489;
+
+  /* 阴影 */
+  --sh-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --sh-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --sh-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --sh-gold: 0 0 12px rgba(212, 168, 67, 0.25);
+
+  /* 字号缩放（4 档：0.85 / 1.0 / 1.15 / 1.35） */
+  --font-scale: 1;
+}
+
+/* ============================================================
+   基础样式
+   ============================================================ */
+html,
+body {
+  background: var(--bg-base);
+  color: var(--tx-1);
+  font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 字体缩放容器（桌面端） */
+.font-scale-container {
+  zoom: var(--font-scale);
+  transform-origin: top left;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bdr-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* ============================================================
+   渐变背景（紫蓝渐变 + 金色辉光）
+   ============================================================ */
+.bg-cosmic {
+  background: linear-gradient(
+    135deg,
+    #0a0a0f 0%,
+    #11121a 30%,
+    #1a1428 60%,
+    #0a0a0f 100%
+  );
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold), var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold), var(--gold-deep));
+}
+
+/* ============================================================
+   命盘棋盘
+   ============================================================ */
+.chart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+  grid-template-rows: auto;
+  gap: 22px;
+  align-items: start;
+}
+
+.chart-grid--vertical {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 18px;
+}
+
+.chart-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 180px);
+  gap: 1px;
+  background: var(--bdr-strong);
+  border: 1px solid var(--gold-deep);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--sh-md);
+}
+
+.palace-cell {
+  background: var(--bg-card);
+  padding: 10px 8px;
+  position: relative;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.palace-cell:hover {
+  background: var(--bg-elevated);
+  transform: scale(1.02);
+  z-index: 2;
+  box-shadow: var(--sh-gold);
+}
+
+.palace-cell--selected {
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--gold);
+  box-shadow: var(--sh-gold);
+}
+
+.palace-cell--empty {
+  background: transparent;
+  border: 1px dashed var(--bdr);
+}
+
+/* 命宫主星高亮 */
+.main-star {
+  font-weight: 600;
+  color: var(--gold-soft);
+  text-shadow: 0 0 4px var(--gold-glow);
+}
+
+.main-star--destiny {
+  animation: pulse-slow 2.5s ease-in-out infinite;
+}
+
+/* 大限宫位呼吸灯 */
+.major-period {
+  position: relative;
+}
+.major-period::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--gold);
+  border-radius: inherit;
+  pointer-events: none;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* ============================================================
+   解读面板
+   ============================================================ */
+.insight-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 12px;
+  box-shadow: var(--sh-md);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.insight-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Tab 切换 */
+.tab-trigger {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--tx-2);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: transparent;
+}
+.tab-trigger:hover {
+  color: var(--tx-1);
+  background: var(--bg-elevated);
+}
+.tab-trigger--active {
+  color: var(--gold-soft);
+  border-color: var(--gold);
+  background: rgba(212, 168, 67, 0.08);
+}
+
+/* 聊天气泡 */
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.message-bubble--user {
+  background: linear-gradient(135deg, rgba(75, 111, 165, 0.18), rgba(107, 91, 149, 0.18));
+  border: 1px solid rgba(107, 91, 149, 0.35);
+  color: var(--tx-1);
+}
+.message-bubble--assistant {
+  background: var(--bg-elevated);
+  border: 1px solid var(--bdr);
+  color: var(--tx-1);
+}
+
+/* Markdown 渲染 */
+.md-content p { margin: 0.5em 0; }
+.md-content strong { color: var(--gold-soft); font-weight: 600; }
+.md-content em { color: var(--tx-1); font-style: italic; }
+.md-content ul, .md-content ol { padding-left: 1.5em; margin: 0.5em 0; }
+.md-content li { margin: 0.25em 0; }
+.md-content code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(212, 168, 67, 0.1);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* 流式光标 */
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--gold);
+  margin-left: 2px;
+  animation: cursorBlink 1s steps(2) infinite;
+  vertical-align: text-bottom;
+}
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ============================================================
+   LoadingIndicator（5 点错开）
+   ============================================================ */
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.loading-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulseDot 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   按钮
+   ============================================================ */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+  color: var(--bg-base);
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sh-gold);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--tx-2);
+  border: 1px solid var(--bdr);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+.btn-ghost:hover {
+  color: var(--tx-1);
+  border-color: var(--bdr-strong);
+  background: var(--bg-elevated);
+}
+
+/* ============================================================
+   输入框 / select
+   ============================================================ */
+.input-field {
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  color: var(--tx-1);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.input-field:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+.input-field::placeholder {
+  color: var(--tx-4);
+}
+
+/* select 暗色下拉修复 */
+select.input-field option {
+  background: var(--bg-card);
+  color: var(--tx-1);
+}
+
+/* ============================================================
+   工具栏（顶栏）
+   ============================================================ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr);
+  border-radius: 12px;
+  box-shadow: var(--sh-sm);
+  margin-bottom: 14px;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--bdr);
+}
+
+/* ============================================================
+   移动端适配（≤768px）
+   ============================================================ */
+@media (max-width: 768px) {
+  .chart-grid,
+  .chart-grid--vertical {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 12px !important;
+  }
+
+  .chart-grid > *:last-child,
+  .chart-grid--vertical > *:last-child {
+    min-height: 400px !important;
+    max-height: 60vh !important;
+  }
+
+  /* 移动端禁用 zoom（避免布局错位） */
+  .font-scale-container {
+    zoom: normal !important;
+  }
+
+  /* 触控按钮 ≥44px（Apple HIG） */
+  .chart-grid button {
+    min-height: 44px;
+  }
+
+  /* 命盘棋盘移动端：4x4 太挤，改 2x8 或滚动 */
+  .chart-board {
+    grid-template-rows: repeat(4, 140px);
+  }
+
+  .topbar {
+    padding: 8px;
+  }
+
+  /* 隐藏部分装饰 */
+  .topbar-divider,
+  .topbar-label {
+    display: none !important;
+  }
+}
+
+/* 380px 极窄屏 */
+@media (max-width: 380px) {
+  .chart-board {
+    grid-template-rows: repeat(4, 110px);
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   无障碍
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
