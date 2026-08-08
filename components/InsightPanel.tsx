@@ -199,7 +199,7 @@ export default function InsightPanel({ chart, selectedPalace }: Props) {
   };
 
   return (
-    <div className="flex h-full min-h-[520px] flex-col rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/80 backdrop-blur-xl shadow-[var(--sh-md)]">
+    <div className="panel-topline flex h-full min-h-[520px] flex-col rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/80 backdrop-blur-xl shadow-[var(--sh-md)]">
       {/* ─── 顶部 Tab 栏 ─────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-1.5 border-b border-[var(--bdr)] px-2 pt-2 pb-1.5">
         {TOPICS.map(t => {

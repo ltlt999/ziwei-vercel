@@ -83,7 +83,7 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/60 backdrop-blur-xl p-3 shadow-[var(--sh-md)]">
+    <div className="panel-topline rounded-2xl border border-[var(--bdr)] bg-[var(--bg-card)]/60 backdrop-blur-xl p-3 shadow-[var(--sh-md)]">
       {/* 顶部时间维度切换 */}
       <TimeNav
         view={timeView}
@@ -92,29 +92,25 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
         onLiunianYearChange={setLiunianYear}
       />
 
-      {/* 命盘中央信息条 */}
-      <div className="my-3 rounded-lg bg-gradient-to-r from-[var(--purple)]/15 via-transparent to-[var(--blue)]/15 border border-[var(--bdr)] px-3 py-2.5">
-        <div className="flex items-center justify-between text-[14px]">
-          <span className="text-[var(--gold)] font-medium">五行局 · {chart.wuxingJuName}</span>
-          <span className="text-[var(--tx-2)]">{chart.currentAge} 岁</span>
-          <span className="text-[var(--tx-3)]">
-            {liunianYear} 流年
-          </span>
-        </div>
+      {/* 命盘中央信息条（三徽章） */}
+      <div className="panel-topline my-3 flex items-center justify-between gap-2 rounded-lg bg-gradient-to-r from-[var(--purple)]/12 via-transparent to-[var(--blue)]/12 border border-[var(--bdr)] px-3 py-2">
+        <span className="info-badge">☯ 五行局 · {chart.wuxingJuName}</span>
+        <span className="info-badge info-badge--muted">🎂 {chart.currentAge} 岁</span>
+        <span className="info-badge">{liunianYear} 流年</span>
       </div>
 
       {/* 12 格命盘 */}
-      <div className="grid grid-cols-4 grid-rows-3 gap-1.5 aspect-square max-h-[640px]">
+      <div className="chart-grid-board grid grid-cols-4 grid-rows-3 gap-1.5 p-1.5 aspect-square max-h-[640px]">
         {/* 上排 4 格 */}
-        {orderedPalaces.slice(0, 4).map(p => (
-          <PalaceCell key={`p-${p.branch}`} palace={{ ...p, name: wrapName(p.name) }} onClick={handlePalaceClick} />
+        {orderedPalaces.slice(0, 4).map((p, i) => (
+          <PalaceCell key={`p-${p.branch}`} palace={{ ...p, name: wrapName(p.name) }} onClick={handlePalaceClick} enterDelay={i * 0.05} />
         ))}
 
         {/* 中排：左格 + 中央信息块 + 右格 */}
-        <PalaceCell palace={{ ...orderedPalaces[4], name: wrapName(orderedPalaces[4].name) }} onClick={handlePalaceClick} />
+        <PalaceCell palace={{ ...orderedPalaces[4], name: wrapName(orderedPalaces[4].name) }} onClick={handlePalaceClick} enterDelay={4 * 0.05} />
         <div className="col-span-2 row-span-1 flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-[var(--purple)]/10 via-[var(--bg-elevated)] to-[var(--blue)]/10 border border-[var(--bdr-strong)] px-2 text-center">
           <div className="text-[10px] text-[var(--tx-3)] tracking-widest">紫微斗数</div>
-          <div className="my-1 text-base font-semibold bg-gradient-to-br from-[var(--gold-soft)] via-[var(--gold)] to-[var(--gold-deep)] bg-clip-text text-transparent">
+          <div className="my-1 text-base font-semibold chart-center-title">
             命盘
           </div>
           <div className="text-[10px] text-[var(--tx-2)]">
@@ -132,11 +128,11 @@ export default function ChartBoard({ chart, onPalaceSelect }: Props) {
             </button>
           )}
         </div>
-        <PalaceCell palace={{ ...orderedPalaces[5], name: wrapName(orderedPalaces[5].name) }} onClick={handlePalaceClick} />
+        <PalaceCell palace={{ ...orderedPalaces[5], name: wrapName(orderedPalaces[5].name) }} onClick={handlePalaceClick} enterDelay={5 * 0.05} />
 
         {/* 下排 6 格（宫位的下标 6~11）*/}
-        {orderedPalaces.slice(6, 12).map(p => (
-          <PalaceCell key={`p-${p.branch}`} palace={{ ...p, name: wrapName(p.name) }} onClick={handlePalaceClick} />
+        {orderedPalaces.slice(6, 12).map((p, i) => (
+          <PalaceCell key={`p-${p.branch}`} palace={{ ...p, name: wrapName(p.name) }} onClick={handlePalaceClick} enterDelay={(i + 6) * 0.05} />
         ))}
       </div>
 

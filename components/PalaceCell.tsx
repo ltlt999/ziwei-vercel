@@ -8,6 +8,7 @@ interface Props {
   palace: Palace;
   onClick?: (palace: Palace) => void;
   compact?: boolean;  // 流年/流月叠加视图用紧凑模式
+  enterDelay?: number; // 入场 stagger 延迟（秒）
 }
 
 /**
@@ -20,7 +21,7 @@ interface Props {
  *  - 副星透明度 0.65
  *  - 借对宫"在 X 宫"提示（空宫时）
  */
-export default function PalaceCell({ palace, onClick, compact }: Props) {
+export default function PalaceCell({ palace, onClick, compact, enterDelay }: Props) {
   const handleClick = () => onClick?.(palace);
 
   const siHuaColor: Record<string, string> = {
@@ -43,9 +44,11 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
       onClick={handleClick}
       whileHover={onClick ? { scale: 1.02 } : undefined}
       whileTap={onClick ? { scale: 0.99 } : undefined}
+      style={enterDelay !== undefined ? { animationDelay: `${enterDelay}s` } : undefined}
       className={clsx(
-        'group relative h-full w-full text-left p-2 transition-colors palace-cell--glow',
-        'bg-[var(--bg-card)] border rounded-lg overflow-hidden',
+        'group relative h-full w-full text-left p-2 transition-colors palace-cell--glow palace-cell--premium',
+        enterDelay !== undefined && 'palace-enter',
+        'border rounded-lg overflow-hidden',
         isMing
           ? 'border-[var(--gold)] shadow-[0_0_12px_var(--gold-glow)]'
           : isEmpty
@@ -57,8 +60,8 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
       <div className="flex items-center justify-between text-[13px] leading-tight">
         <span
           className={clsx(
-            'tracking-wider truncate',
-            isMing ? 'text-[var(--gold-soft)] font-semibold' : 'text-[var(--tx-2)]',
+            'palace-name tracking-wider truncate',
+            isMing ? 'palace-name--ming text-[var(--gold-soft)] font-semibold' : 'text-[var(--tx-2)]',
           )}
         >
           {palace.name}
@@ -84,7 +87,7 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
                 key={`${s.name}-${idx}`}
                 className={clsx(
                   'flex items-center justify-between gap-1 truncate',
-                  isMajor ? 'text-[15px] font-semibold text-[var(--tx-1)]' : 'text-xs text-[var(--tx-3)] opacity-85',
+                  isMajor ? 'star-major text-[15px] font-semibold text-[var(--tx-1)]' : 'text-xs text-[var(--tx-3)] opacity-85',
                 )}
               >
                 <span className="truncate">{s.name}</span>
@@ -106,7 +109,7 @@ export default function PalaceCell({ palace, onClick, compact }: Props) {
 
       {/* 大限底部条 */}
       {palace.daXianAge && !compact && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--bdr)]" />
+        <div className="dx-bar absolute bottom-0 left-1 right-1 h-[2px] rounded-full" />
       )}
     </motion.button>
   );

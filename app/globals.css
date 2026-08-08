@@ -215,6 +215,125 @@ body {
   opacity: 1;
 }
 
+/* ============================================================
+   命盘殿堂级升级（高级感 · 专业感 · 线条质感）
+   ============================================================ */
+
+/* 棋盘：罗盘同心圆底纹 + 内发光 */
+.chart-grid-board {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(107, 91, 149, 0.10) 0%, transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(74, 111, 165, 0.06) 0%, transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(212, 168, 67, 0.04) 0%, transparent 80%),
+    linear-gradient(160deg, #13141f 0%, #0d0e16 100%);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.35),
+    inset 0 0 1px rgba(212, 168, 67, 0.15);
+  border-radius: 10px;
+  border: 1px solid rgba(212, 168, 67, 0.28);
+}
+
+/* 宫格 premium：微渐变 + 分隔线 */
+.palace-cell--premium {
+  background: linear-gradient(165deg, rgba(26, 28, 42, 0.92) 0%, rgba(17, 18, 26, 0.96) 100%);
+  border: 1px solid rgba(212, 168, 67, 0.10);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease, background 0.3s ease;
+}
+.palace-cell--premium:hover {
+  border-color: rgba(212, 168, 67, 0.45);
+  box-shadow: 0 0 16px rgba(212, 168, 67, 0.12), inset 0 0 20px rgba(212, 168, 67, 0.04);
+}
+
+/* 宫名：衬线 + 左侧金色竖条（古卷宗质感） */
+.palace-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.12em;
+}
+.palace-name::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 11px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold-deep));
+  box-shadow: 0 0 6px rgba(212, 168, 67, 0.4);
+  flex-shrink: 0;
+}
+.palace-name--ming::before {
+  background: linear-gradient(180deg, #fff3d0, var(--gold));
+  box-shadow: 0 0 10px rgba(212, 168, 67, 0.7);
+}
+
+/* 主星衬线（命理典籍感） */
+.star-major {
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.05em;
+}
+
+/* 宫位入场 stagger */
+@keyframes palace-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.palace-enter {
+  animation: palace-enter 0.4s ease-out both;
+}
+
+/* 中央信息徽章 */
+.info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  background: linear-gradient(135deg, rgba(212, 168, 67, 0.10), rgba(212, 168, 67, 0.03));
+  color: var(--gold-soft);
+  letter-spacing: 0.04em;
+}
+.info-badge--muted {
+  border-color: rgba(139, 130, 120, 0.25);
+  background: linear-gradient(135deg, rgba(139, 130, 120, 0.08), rgba(139, 130, 120, 0.02));
+  color: var(--tx-2);
+}
+
+/* 中央命盘字块：金色流光扫过 */
+.chart-center-title {
+  position: relative;
+  background: linear-gradient(120deg, var(--gold-soft) 0%, var(--gold) 40%, #fff3d0 55%, var(--gold) 70%, var(--gold-deep) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gold-flow 5s ease-in-out infinite;
+}
+
+/* 面板顶线（画框质感） */
+.panel-topline {
+  position: relative;
+}
+.panel-topline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 168, 67, 0.5), transparent);
+}
+
+/* 大限底部条渐变 */
+.dx-bar {
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.5);
+}
+
 /* 尊重系统减弱动效偏好 */
 @media (prefers-reduced-motion: reduce) {
   .bg-cosmic,
@@ -223,7 +342,9 @@ body {
   .taiji-spin,
   .title-gold-flow,
   .divider-flow::after,
-  .animate-fade-up {
+  .animate-fade-up,
+  .palace-enter,
+  .chart-center-title {
     animation: none !important;
   }
 }
