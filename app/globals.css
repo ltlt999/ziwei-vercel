@@ -849,29 +849,6 @@ select option {
 }
 
 /* ============================================================
-   工具栏（顶栏）
-   ============================================================ */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 8px 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--bdr);
-  border-radius: 12px;
-  box-shadow: var(--sh-sm);
-  margin-bottom: 14px;
-}
-
-.topbar-divider {
-  width: 1px;
-  height: 18px;
-  background: var(--bdr);
-}
-
-/* ============================================================
    移动端适配（≤768px）
    ============================================================ */
 @media (max-width: 768px) {
@@ -901,16 +878,6 @@ select option {
   /* 命盘棋盘移动端：4x4 太挤，改 2x8 或滚动 */
   .chart-board {
     grid-template-rows: repeat(4, 140px);
-  }
-
-  .topbar {
-    padding: 8px;
-  }
-
-  /* 隐藏部分装饰 */
-  .topbar-divider,
-  .topbar-label {
-    display: none !important;
   }
 }
 
