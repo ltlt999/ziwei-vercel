@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import html2canvas from 'html2canvas';
 
@@ -30,6 +31,12 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
   const cardRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Portal 需等客户端挂载完成（避免 SSR hydration mismatch）
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ESC 关闭
   useEffect(() => {
@@ -55,7 +62,7 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
     if (!cardRef.current || busy) return;
     setBusy(true);
     try {
-      // 截图前临时展开 maxHeight 限制
+      // 截图前临时取消内部滚动限制（让 html2canvas 截完整内容）
       const contentEl = cardRef.current.querySelector('[data-share-content]') as HTMLElement | null;
       const prevMaxHeight = contentEl?.style.maxHeight;
       const prevOverflow = contentEl?.style.overflowY;
@@ -71,7 +78,7 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
         logging: false,
       });
 
-      // 恢复 maxHeight
+      // 恢复
       if (contentEl) {
         contentEl.style.maxHeight = prevMaxHeight ?? '';
         contentEl.style.overflowY = prevOverflow ?? '';
@@ -89,7 +96,9 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
     }
   };
 
-  return (
+  // 用 Portal 挂到 body 直系，避免父级 transform/backdrop-filter 影响 fixed 定位
+  if (!mounted) return null;
+  const modal = (
     <AnimatePresence>
       {open && (
         <motion.div
@@ -97,44 +106,50 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] flex items-stretch justify-center overflow-hidden bg-black/70 backdrop-blur-sm sm:items-center sm:p-4"
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={e => e.stopPropagation()}
-            className="relative w-full max-w-md"
+            className="relative flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden sm:h-auto sm:max-h-[90vh] sm:min-h-0 sm:rounded-2xl"
+            style={{
+              paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
+              paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
+            }}
           >
-            {/* 关闭按钮（右上角，绝对定位） */}
-            <button
-              onClick={onClose}
-              className="absolute -right-2 -top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--bg-card)] text-[var(--tx-2)] shadow-lg transition hover:text-[var(--tx-1)]"
-              title="关闭 (ESC)"
-            >
-              ✕
-            </button>
+            {/* 顶部标题栏（固定可见，含关闭按钮） */}
+            <div className="flex flex-shrink-0 items-center justify-end px-2 pb-1">
+              <button
+                onClick={onClose}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--bg-card)]/80 text-[var(--tx-2)] shadow-lg backdrop-blur transition hover:text-[var(--tx-1)] active:scale-90"
+                title="关闭 (ESC)"
+              >
+                ✕
+              </button>
+            </div>
 
-            {/* 分享卡片本体 */}
+            {/* 分享卡片本体（移动端 flex 收缩，操作栏始终可见） */}
             <div
               ref={cardRef}
-              className="overflow-hidden rounded-2xl shadow-[var(--sh-lg)]"
+              className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl shadow-[var(--sh-lg)] sm:flex-none"
               style={{
                 background: `linear-gradient(135deg, #0a0a0f 0%, #1a1428 50%, #0a0a0f 100%)`,
                 border: `1px solid ${color}50`,
               }}
             >
-              {/* 顶部光晕 */}
+              {/* 顶部光晕（截图用，flex-none） */}
               <div
-                className="h-1.5 w-full"
+                className="h-1.5 w-full flex-shrink-0"
                 style={{
                   background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
                   boxShadow: `0 0 12px ${color}`,
                 }}
               />
 
-              {/* 内容 */}
-              <div className="p-5" data-share-content style={{ maxHeight: 480, overflowY: 'auto' }}>
+              {/* 内容（min-h-0 才能内部滚动） */}
+              <div className="min-h-0 flex-1 overflow-y-auto p-5" data-share-content>
                 {/* 标题 */}
                 <div className="mb-3 text-center">
                   <div className="text-[10px] tracking-[0.3em] text-[var(--tx-3)] uppercase">倪海夏《天纪》</div>
@@ -198,18 +213,18 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
               </div>
             </div>
 
-            {/* 操作栏 */}
-            <div className="mt-3 flex gap-2">
+            {/* 操作栏（始终在底部，移动端永远可见） */}
+            <div className="mt-3 flex flex-shrink-0 gap-2">
               <button
                 onClick={copyText}
-                className="flex-1 rounded-xl border border-[var(--bdr)] bg-[var(--bg-card)] py-2 text-sm text-[var(--tx-1)] transition hover:border-[var(--bdr-strong)] active:scale-[0.97]"
+                className="flex-1 rounded-lg border border-[var(--bdr)] bg-[var(--bg-card)] py-2.5 text-sm text-[var(--tx-1)] transition hover:border-[var(--bdr-strong)] active:scale-[0.97]"
               >
                 {copied ? '✅ 已复制' : '📋 复制文本'}
               </button>
               <button
                 onClick={downloadPNG}
                 disabled={busy}
-                className="flex-1 rounded-xl py-2 text-sm font-medium text-[var(--bg-base)] transition active:scale-[0.97] disabled:opacity-40"
+                className="flex-1 rounded-lg py-2.5 text-sm font-semibold text-[var(--bg-base)] transition active:scale-[0.97] disabled:opacity-40"
                 style={{
                   background: `linear-gradient(135deg, ${color}, ${color}cc)`,
                 }}
@@ -222,6 +237,7 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
       )}
     </AnimatePresence>
   );
+  return createPortal(modal, document.body);
 }
 
 /** 清理 Markdown 标记，复制时给纯文本用 */
