@@ -859,10 +859,16 @@ select option {
     gap: 12px !important;
   }
 
+  /* 移动端解读面板：限制 70vh 独立滚动，命盘保持不动 */
   .chart-grid > *:last-child,
   .chart-grid--vertical > *:last-child {
-    min-height: 400px !important;
-    max-height: 60vh !important;
+    max-height: 70vh !important;
+  }
+  /* 移动端取消 InsightPanel h-full（避免 grid 没高度时退化） */
+  .chart-grid > *:last-child > .panel-topline,
+  .chart-grid--vertical > *:last-child > .panel-topline {
+    height: 100% !important;
+    min-height: 0 !important;
   }
 
   /* 移动端禁用 zoom（避免布局错位） */
