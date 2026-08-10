@@ -84,16 +84,74 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
         contentEl.style.overflowY = prevOverflow ?? '';
       }
 
-      const link = document.createElement('a');
       const filename = `紫微斗数_${topic}_${new Date().toISOString().slice(0, 10)}.png`;
-      link.download = filename;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+
+      // 优先：Web Share API（iOS Safari / Android Chrome 原生"保存图片"或"分享"）
+      if (typeof navigator !== 'undefined' && 'canShare' in navigator && navigator.canShare) {
+        try {
+          canvas.toBlob(async (blob) => {
+            if (!blob) return;
+            const file = new File([blob], filename, { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: filename,
+                text: `${filename} · 倪海夏《天纪》`,
+              });
+              return; // 成功用 share API
+            }
+            // canShare 不支持 file，降级到 download 链接
+            fallbackDownload(canvas, filename);
+          }, 'image/png');
+          return;
+        } catch (shareErr) {
+          // 用户取消 share dialog 或 share API 失败 → 降级
+          console.warn('Web Share API failed, falling back:', shareErr);
+        }
+      }
+
+      // 降级 1：标准 <a download>（桌面 Chrome / Firefox / Android Chrome）
+      fallbackDownload(canvas, filename);
     } catch (err) {
       console.error('Share download failed:', err);
     } finally {
       setBusy(false);
     }
+  };
+
+  // 降级下载方案：a.download → Blob URL → 新窗口预览
+  const fallbackDownload = (canvas: HTMLCanvasElement, filename: string) => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    if (isIOS) {
+      // iOS Safari 不支持 a.download → 弹出图片让用户长按保存
+      try {
+        const dataUrl = canvas.toDataURL('image/png');
+        const win = window.open();
+        if (win) {
+          win.document.write(
+            `<title>${filename}</title>` +
+            `<meta name="viewport" content="width=device-width, initial-scale=1">` +
+            `<style>body{margin:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;min-height:100vh}` +
+            `img{max-width:100%;height:auto;display:block}</style>` +
+            `<p style="color:#d4a843;text-align:center;font-family:sans-serif;padding:16px">长按图片保存到相册</p>` +
+            `<img src="${dataUrl}" alt="${filename}">`
+          );
+        }
+      } catch (e) {
+        console.error('iOS fallback failed:', e);
+      }
+      return;
+    }
+    // 桌面 / Android Chrome 标准下载
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = url;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/png');
   };
 
   // 用 Portal 挂到 body 直系，避免父级 transform/backdrop-filter 影响 fixed 定位
