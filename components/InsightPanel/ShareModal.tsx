@@ -113,7 +113,7 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={e => e.stopPropagation()}
-            className="relative flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden sm:h-auto sm:max-h-[90vh] sm:min-h-0 sm:rounded-2xl"
+            className="relative flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden sm:my-auto sm:h-auto sm:max-h-[90vh] sm:min-h-0 sm:rounded-2xl"
             style={{
               paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
               paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
@@ -130,10 +130,10 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
               </button>
             </div>
 
-            {/* 分享卡片本体（移动端 flex 收缩，操作栏始终可见） */}
+            {/* 分享卡片本体（桌面+移动端都保持 flex 项，让内容 flex-1 overflow-y-auto 生效） */}
             <div
               ref={cardRef}
-              className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl shadow-[var(--sh-lg)] sm:flex-none"
+              className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl shadow-[var(--sh-lg)]"
               style={{
                 background: `linear-gradient(135deg, #0a0a0f 0%, #1a1428 50%, #0a0a0f 100%)`,
                 border: `1px solid ${color}50`,
