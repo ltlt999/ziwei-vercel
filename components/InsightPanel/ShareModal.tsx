@@ -62,27 +62,71 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
     if (!cardRef.current || busy) return;
     setBusy(true);
     try {
-      // 截图前临时取消内部滚动限制（让 html2canvas 截完整内容）
-      const contentEl = cardRef.current.querySelector('[data-share-content]') as HTMLElement | null;
-      const prevMaxHeight = contentEl?.style.maxHeight;
-      const prevOverflow = contentEl?.style.overflowY;
+      // 截图前：克隆 card 到屏幕外绝对定位容器，让它脱离 flex 布局自然展开
+      const cardEl = cardRef.current;
+      const prevStyles = {
+        cardPosition: cardEl.style.position,
+        cardTop: cardEl.style.top,
+        cardLeft: cardEl.style.left,
+        cardWidth: cardEl.style.width,
+        cardMaxHeight: cardEl.style.maxHeight,
+        cardHeight: cardEl.style.height,
+        cardOverflow: cardEl.style.overflow,
+      };
+      const contentEl = cardEl.querySelector('[data-share-content]') as HTMLElement | null;
+      const prevContentStyles = {
+        maxHeight: contentEl?.style.maxHeight ?? '',
+        overflow: contentEl?.style.overflowY ?? '',
+      };
+      // 临时移除装饰性 box-shadow 防止渲染到下方元素
+      const dividerEls = cardEl.querySelectorAll('[data-share-divider]');
+      const prevDividerShadows: string[] = [];
+      dividerEls.forEach((el) => {
+        prevDividerShadows.push((el as HTMLElement).style.boxShadow);
+        (el as HTMLElement).style.boxShadow = 'none';
+      });
+
+      // 移到屏幕外但保留渲染，让 card 自然展开到完整内容高度
+      cardEl.style.position = 'absolute';
+      cardEl.style.top = '-99999px';
+      cardEl.style.left = '0';
+      cardEl.style.width = '448px'; // 桌面 modal max-w-md 等宽
+      cardEl.style.maxHeight = 'none';
+      cardEl.style.height = 'auto';
+      cardEl.style.overflow = 'visible';
       if (contentEl) {
         contentEl.style.maxHeight = 'none';
         contentEl.style.overflowY = 'visible';
       }
+      // 强制 reflow
+      void cardEl.offsetHeight;
 
-      const canvas = await html2canvas(cardRef.current, {
+      const canvas = await html2canvas(cardEl, {
         scale: 2,
         backgroundColor: '#0a0a0f',
         useCORS: true,
         logging: false,
+        width: cardEl.offsetWidth,
+        height: cardEl.offsetHeight,
+        windowWidth: document.documentElement.clientWidth,
+        windowHeight: document.documentElement.clientHeight,
       });
 
-      // 恢复
+      // 恢复所有原始状态
+      cardEl.style.position = prevStyles.cardPosition;
+      cardEl.style.top = prevStyles.cardTop;
+      cardEl.style.left = prevStyles.cardLeft;
+      cardEl.style.width = prevStyles.cardWidth;
+      cardEl.style.maxHeight = prevStyles.cardMaxHeight;
+      cardEl.style.height = prevStyles.cardHeight;
+      cardEl.style.overflow = prevStyles.cardOverflow;
       if (contentEl) {
-        contentEl.style.maxHeight = prevMaxHeight ?? '';
-        contentEl.style.overflowY = prevOverflow ?? '';
+        contentEl.style.maxHeight = prevContentStyles.maxHeight;
+        contentEl.style.overflowY = prevContentStyles.overflow;
       }
+      dividerEls.forEach((el, i) => {
+        (el as HTMLElement).style.boxShadow = prevDividerShadows[i];
+      });
 
       const filename = `紫微斗数_${topic}_${new Date().toISOString().slice(0, 10)}.png`;
 
@@ -197,13 +241,13 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
                 border: `1px solid ${color}50`,
               }}
             >
-              {/* 顶部光晕（截图用，flex-none） */}
+              {/* 顶部细装饰（flex-none） */}
               <div
-                className="h-1.5 w-full flex-shrink-0"
+                className="h-px w-full flex-shrink-0"
                 style={{
-                  background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-                  boxShadow: `0 0 12px ${color}`,
+                  background: `linear-gradient(90deg, transparent, ${color}80, transparent)`,
                 }}
+                data-share-divider
               />
 
               {/* 内容（min-h-0 才能内部滚动） */}
@@ -211,7 +255,10 @@ export default function ShareModal({ open, onClose, text, topic, color = '#d4a84
                 {/* 标题 */}
                 <div className="mb-3 text-center">
                   <div className="text-[10px] tracking-[0.3em] text-[var(--tx-3)] uppercase">倪海夏《天纪》</div>
-                  <div className="mt-1 text-2xl font-bold bg-gradient-to-br from-[var(--gold-soft)] via-[var(--gold)] to-[var(--gold-deep)] bg-clip-text text-transparent">
+                  <div
+                    className="mt-1 text-2xl font-bold share-title-gradient"
+                    data-share-title
+                  >
                     紫微斗数 · {topic}
                   </div>
                   <div

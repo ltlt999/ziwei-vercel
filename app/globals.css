@@ -903,6 +903,16 @@ select option {
   outline-offset: 2px;
 }
 
+/* ============================================================
+   分享卡片标题渐变（截图兼容版：用 -webkit-text-fill-color 实现，
+   html2canvas 比 bg-clip-text text-transparent 更稳定）
+   ============================================================ */
+.share-title-gradient {
+  /* html2canvas 兼容：不要用 text-transparent，纯色让截图清晰 */
+  color: var(--gold);
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
